@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -10,7 +9,6 @@ import { signIn } from '../_lib/actions'
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
-  const router = useRouter()
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -22,8 +20,7 @@ export function LoginForm() {
       if (result?.error) {
         setError(result.error)
       } else {
-        router.push('/dashboard')
-        router.refresh()
+        window.location.href = '/dashboard'
       }
     })
   }
