@@ -14,7 +14,7 @@ export async function signIn(formData: FormData) {
     return { error: error.message }
   }
 
-  redirect('/dashboard')
+  return { success: true }
 }
 
 export async function signUp(formData: FormData) {
@@ -43,7 +43,7 @@ export async function signUp(formData: FormData) {
 export async function signOut() {
   const supabase = await getSupabaseServerClient()
   await supabase.auth.signOut()
-  redirect('/login')
+  return { success: true }
 }
 
 export async function resetPassword(formData: FormData) {

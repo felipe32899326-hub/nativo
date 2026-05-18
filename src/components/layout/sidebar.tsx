@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard,
@@ -27,6 +27,8 @@ interface SidebarProps {
 }
 
 export function Sidebar({ profile }: SidebarProps) {
+  const router = useRouter()
+
   const pathname = usePathname()
 
   return (
@@ -70,7 +72,7 @@ export function Sidebar({ profile }: SidebarProps) {
             </Badge>
           </div>
           <button
-            onClick={() => signOut()}
+            onClick={async () => { await signOut(); router.push('/login'); router.refresh() }}
             className="text-muted-foreground hover:text-foreground transition-colors"
             title="Sair"
           >
