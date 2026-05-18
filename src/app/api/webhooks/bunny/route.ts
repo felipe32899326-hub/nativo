@@ -9,12 +9,14 @@ import {
 import { BUNNY_STATUS } from '@/lib/constants'
 
 export async function POST(request: NextRequest) {
-  const body = await request.text()
-  const signature = request.headers.get('bunny-signature')
+  const secret = process.env.BUNNY_WEBHOOK_SECRET
+  const tokenParam = request.nextUrl.searchParams.get('secret')
 
-  if (!verifyBunnyWebhookSignature(body, signature)) {
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+  if (secret && tokenParam !== secret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  const body = await request.text()
 
   let payload: {
     VideoGuid: string
