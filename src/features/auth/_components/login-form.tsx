@@ -1,28 +1,33 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { signIn } from '../_lib/actions'
+import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setIsPending] = useState(false)
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError(null)
-    const formData = new FormData(e.currentTarget)
+    setIsPending(true)
 
-    startTransition(async () => {
-      const result = await signIn(formData)
-      if (result?.error) {
-        setError(result.error)
-      } else {
-        window.location.href = '/dashboard'
-      }
-    })
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    const supabase = getSupabaseBrowserClient()
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+
+    if (authError) {
+      setError(authError.message)
+      setIsPending(false)
+    } else {
+      window.location.href = '/dashboard'
+    }
   }
 
   return (
