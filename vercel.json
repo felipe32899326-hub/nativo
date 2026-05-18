@@ -1,0 +1,11 @@
+{
+  "framework": "nextjs",
+  "regions": ["gru1"],
+  "env": {
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
+    "BUNNY_STREAM_API_KEY": "@bunny_stream_api_key",
+    "BUNNY_WEBHOOK_SECRET": "@bunny_webhook_secret"
+  },
+  "buildCommand": "next build",
+  "outputDirectory": ".next"
+}
