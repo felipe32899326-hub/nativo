@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null)
@@ -19,11 +18,16 @@ export function LoginForm() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    const supabase = getSupabaseBrowserClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      redirect: 'follow',
+    })
 
-    if (authError) {
-      setError(authError.message)
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      setError(data.error ?? 'Erro ao fazer login')
       setIsPending(false)
     } else {
       window.location.href = '/dashboard'
