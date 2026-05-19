@@ -1,84 +1,76 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
-  LayoutDashboard,
   Video,
+  FlaskConical,
+  Shield,
+  Target,
   Settings,
-  CreditCard,
-  LogOut,
+  GraduationCap,
+  HelpCircle,
+  ChevronRight,
 } from 'lucide-react'
-import { signOut } from '@/features/auth/_lib/actions'
-import type { Profile } from '@/lib/supabase/types'
-import { Avatar } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/videos', label: 'Vídeos', icon: Video },
+  { href: '/videos', label: 'Meus vídeos', icon: Video },
+  { href: '/testes-ab', label: 'Testes A/B', icon: FlaskConical },
+  { href: '/seguranca', label: 'Segurança', icon: Shield },
+  { href: '/conversoes', label: 'Conversões', icon: Target },
   { href: '/settings', label: 'Configurações', icon: Settings },
-  { href: '/billing', label: 'Plano', icon: CreditCard },
+  { href: '/academy', label: 'Academy', icon: GraduationCap },
 ]
 
-interface SidebarProps {
-  profile: Profile
-}
+const APP_VERSION = 'v1.0.0'
 
-export function Sidebar({ profile }: SidebarProps) {
-  const router = useRouter()
-
+export function Sidebar() {
   const pathname = usePathname()
 
-  return (
-    <aside className="flex h-full w-60 flex-col border-r border-border bg-surface">
-      {/* Logo */}
-      <div className="flex h-14 items-center px-5 border-b border-border">
-        <Link href="/dashboard" className="text-lg font-bold tracking-tight">
-          Nati<span className="text-accent">v₀</span>
-        </Link>
-      </div>
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + '/')
 
-      {/* Nav */}
+  return (
+    <aside className="flex h-full w-56 flex-col border-r border-border bg-surface">
       <nav className="flex-1 overflow-y-auto p-3 space-y-0.5">
         {navItems.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
             className={cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-              pathname === href || pathname.startsWith(href + '/')
-                ? 'bg-white/8 text-foreground font-medium'
-                : 'text-muted-foreground hover:text-foreground hover:bg-white/4',
+              'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors',
+              isActive(href)
+                ? 'bg-accent-soft text-accent font-medium'
+                : 'text-foreground hover:bg-muted',
             )}
           >
             <Icon size={16} />
             {label}
           </Link>
         ))}
+
+        {/* Ajuda — with chevron */}
+        <Link
+          href="/ajuda"
+          className={cn(
+            'mt-1 flex items-center justify-between rounded-lg px-3 py-2.5 text-sm transition-colors',
+            isActive('/ajuda')
+              ? 'bg-accent-soft text-accent font-medium'
+              : 'text-foreground hover:bg-muted',
+          )}
+        >
+          <span className="flex items-center gap-3">
+            <HelpCircle size={16} />
+            Ajuda
+          </span>
+          <ChevronRight size={14} className="text-muted-foreground" />
+        </Link>
       </nav>
 
-      {/* User / plan */}
-      <div className="border-t border-border p-3">
-        <div className="flex items-center gap-3 rounded-lg px-3 py-2">
-          <Avatar src={profile.avatar_url} name={profile.full_name} size="sm" />
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-foreground truncate">
-              {profile.full_name ?? profile.email}
-            </p>
-            <Badge variant={profile.plan_id === 'trial' ? 'warning' : 'success'} className="mt-0.5">
-              {profile.plan_id === 'trial' ? 'Trial' : profile.plan_id}
-            </Badge>
-          </div>
-          <button
-            onClick={async () => { await signOut(); router.push('/login'); router.refresh() }}
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            title="Sair"
-          >
-            <LogOut size={14} />
-          </button>
-        </div>
+      {/* Version footer */}
+      <div className="px-4 py-3">
+        <p className="text-[10px] text-muted-foreground text-center">{APP_VERSION}</p>
       </div>
     </aside>
   )

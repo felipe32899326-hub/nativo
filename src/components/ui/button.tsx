@@ -20,9 +20,9 @@ const buttonClasses = ({
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
     (disabled || loading) && 'opacity-40 cursor-not-allowed pointer-events-none',
     {
-      'bg-white text-black hover:bg-white/90 active:scale-[0.98]': variant === 'default',
-      'border border-border bg-transparent text-foreground hover:bg-surface-raised active:scale-[0.98]': variant === 'outline',
-      'bg-transparent text-muted-foreground hover:text-foreground hover:bg-surface-raised': variant === 'ghost',
+      'bg-foreground text-background hover:opacity-90 active:scale-[0.98]': variant === 'default',
+      'border border-border bg-surface text-foreground hover:bg-muted active:scale-[0.98]': variant === 'outline',
+      'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted': variant === 'ghost',
       'bg-destructive text-white hover:bg-destructive/90 active:scale-[0.98]': variant === 'destructive',
       'bg-accent text-accent-foreground hover:bg-accent/90 active:scale-[0.98]': variant === 'accent',
       'h-7 px-3 text-xs': size === 'sm',
